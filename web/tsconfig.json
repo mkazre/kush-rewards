@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "types": ["vite/client"],
+    "paths": { "@shared/*": ["../mobile/src/*"] }
+  },
+  "include": [
+    "src",
+    "../mobile/src/types/api.ts",
+    "../mobile/src/lib/contentFilter.ts",
+    "../mobile/src/lib/reviewTags.ts",
+    "../mobile/src/lib/storeUtils.ts",
+    "../mobile/src/lib/legalContent.ts"
+  ]
+}

@@ -1,0 +1,132 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Colours match mobile/src/theme/theme.tsx. Light: pale sage, bottle green. Dark: deep forest. */
+:root {
+  --c-bg: #f2f5f0;
+  --c-fg: #15231b;
+  --c-surface: #e5eae1;
+  --c-card: #ffffff;
+  --c-primary: #1d6842;
+  --c-primary-fg: #ffffff;
+  --c-secondary: #dbebe0;
+  --c-secondary-fg: #185838;
+  --c-accent: #e1a52d;
+  --c-accent-fg: #291b00;
+  --c-accent-soft: #fcf0d5;
+  --c-accent-soft-fg: #7a5200;
+  --c-muted: #e0e5dc;
+  --c-muted-fg: #546459;
+  --c-success: #21784d;
+  --c-error: #b3281e;
+  --c-border: #d3dace;
+  --c-whatsapp: #1f9d55;
+  color-scheme: light;
+}
+.dark {
+  --c-bg: #0e1611;
+  --c-fg: #e5ebe5;
+  --c-surface: #17211b;
+  --c-card: #151e19;
+  --c-primary: #57b784;
+  --c-primary-fg: #09150e;
+  --c-secondary: #1d3528;
+  --c-secondary-fg: #94d1b0;
+  --c-accent: #e8b245;
+  --c-accent-fg: #291b00;
+  --c-accent-soft: #33270f;
+  --c-accent-soft-fg: #f1cc74;
+  --c-muted: #232f28;
+  --c-muted-fg: #9bab9e;
+  --c-success: #57b784;
+  --c-error: #ee8177;
+  --c-border: #27342d;
+  --c-whatsapp: #2fb36a;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-fg: var(--c-fg);
+  --color-surface: var(--c-surface);
+  --color-card: var(--c-card);
+  --color-primary: var(--c-primary);
+  --color-primary-fg: var(--c-primary-fg);
+  --color-secondary: var(--c-secondary);
+  --color-secondary-fg: var(--c-secondary-fg);
+  --color-accent: var(--c-accent);
+  --color-accent-fg: var(--c-accent-fg);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-accent-soft-fg: var(--c-accent-soft-fg);
+  --color-muted: var(--c-muted);
+  --color-muted-fg: var(--c-muted-fg);
+  --color-success: var(--c-success);
+  --color-error: var(--c-error);
+  --color-border: var(--c-border);
+  --color-whatsapp: var(--c-whatsapp);
+  --font-sans: "Figtree", system-ui, sans-serif;
+  --font-display: "Schibsted Grotesk", "Figtree", system-ui, sans-serif;
+  --font-brand: "Righteous", system-ui, sans-serif;
+}
+
+html,
+body {
+  background: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* Reusable pieces. Edit here to restyle the whole site. */
+@utility card {
+  @apply rounded-2xl border border-border bg-card;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
+    disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+}
+@utility btn-primary {
+  @apply btn bg-primary text-primary-fg hover:brightness-110;
+}
+@utility btn-secondary {
+  @apply btn bg-secondary text-secondary-fg hover:brightness-95 dark:hover:brightness-125;
+}
+@utility btn-ghost {
+  @apply btn text-fg hover:bg-muted;
+}
+@utility btn-danger {
+  @apply btn bg-error text-white hover:brightness-110;
+}
+@utility input {
+  @apply w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm text-fg placeholder:text-muted-fg
+    focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25;
+}
+@utility label {
+  @apply mb-1.5 block text-sm font-semibold;
+}
+@utility chip {
+  @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-medium transition hover:border-primary;
+}
+@utility chip-on {
+  @apply border-primary bg-primary text-primary-fg;
+}
+@utility pill {
+  @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold;
+}
+
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--c-surface);
+}
+.dark .leaflet-tile-pane {
+  filter: brightness(0.75) invert(1) contrast(0.9) hue-rotate(180deg) saturate(0.4);
+}
