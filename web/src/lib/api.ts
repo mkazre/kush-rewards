@@ -3,6 +3,8 @@
 import type {
   AcceptTermsResponse,
   AdminOverview,
+  AdminUser,
+  AdminUserSaveInput,
   AuthResponse,
   BlockReviewerResponse,
   CreateReportInput,
@@ -101,6 +103,9 @@ export const api = {
   adminDecideSubmission: (input: SubmissionDecideInput) => post<{ storeId: number | null }>("/admin/submission_decide", input),
   adminResolveReport: (input: ReportResolveInput) => post<Ok>("/admin/report_resolve", input),
   adminReviewStatus: (input: ReviewStatusInput) => post<Ok>("/admin/review_status", input),
+  adminUsers: (q?: string) => get<{ users: AdminUser[] }>("/admin/users", { q: q || undefined }),
+  adminSaveUser: (input: AdminUserSaveInput) => post<{ id: number }>("/admin/user_save", input),
+  adminDeleteUser: (id: number) => post<Ok>("/admin/user_delete", { id }),
 
   /** Gets a signed upload URL, PUTs the file, and returns the logo's public URL. */
   async uploadLogo(file: File): Promise<string> {

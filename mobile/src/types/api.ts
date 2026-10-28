@@ -6,7 +6,8 @@
  */
 
 // ---------- Shared enums ----------
-export type UserRole = "admin" | "user";
+/** "partner" = a venue owner or manager, optionally linked to their venue by an admin. */
+export type UserRole = "admin" | "partner" | "user";
 export type StoreType = "dispensary" | "club" | "lounge";
 export type StoreStatus = "live" | "hidden";
 export type SubmissionStatus = "pending" | "needs_info" | "approved" | "rejected";
@@ -242,6 +243,30 @@ export interface AdminOverview {
   reports: AdminReport[];
   reviews: AdminReview[];
   userCount: number;
+}
+
+/** Admin → Users list row (GET /admin/users). */
+export interface AdminUser {
+  id: number;
+  email: string;
+  displayName: string;
+  role: UserRole;
+  partnerStoreId: number | null;
+  partnerStoreName: string | null;
+  reviewCount: number;
+  signInMethods: string[]; // "email" | "google" | "apple"
+  termsAcceptedAt: string | null;
+  createdAt: string;
+}
+
+/** POST /admin/user_save. id null creates the user (password required); otherwise password is optional (blank = unchanged). */
+export interface AdminUserSaveInput {
+  id: number | null;
+  displayName: string;
+  email: string;
+  role: UserRole;
+  password: string;
+  partnerStoreId: number | null;
 }
 
 export interface StoreSaveInput {

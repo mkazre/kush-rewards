@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\UserAdminController;
 use Illuminate\Support\Facades\Route;
 
 // Public settings the website needs at runtime.
@@ -44,4 +45,7 @@ Route::post('/admin/submission_decide', [AdminController::class, 'submissionDeci
 Route::post('/admin/report_resolve', [AdminController::class, 'reportResolve']);
 Route::post('/admin/review_status', [AdminController::class, 'reviewStatus']);
 Route::post('/admin/logo_upload', [AdminController::class, 'logoUpload']);
+Route::get('/admin/users', [UserAdminController::class, 'list']);
+Route::post('/admin/user_save', [UserAdminController::class, 'save']);
+Route::post('/admin/user_delete', [UserAdminController::class, 'delete']);
 Route::put('/uploads/logo/{name}', [AdminController::class, 'logoPut'])->name('logo.put')->middleware('signed');

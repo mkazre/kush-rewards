@@ -7,6 +7,7 @@ import { formatReviewDate, isNegativeTag } from "@shared/lib/reviewTags";
 import { TYPE_LABELS } from "@shared/lib/storeUtils";
 import type { AdminOverview, AdminStore, AdminSubmission } from "@shared/types/api";
 import { StoreEditor } from "../components/StoreEditor";
+import { UsersAdmin } from "../components/UsersAdmin";
 import { Empty, ErrorBox, Spinner, Stars, VenueLogo } from "../components/ui";
 import { api } from "../lib/api";
 import { useAuth } from "../lib/auth";
@@ -14,7 +15,7 @@ import { keys } from "../lib/queries";
 import { useToast } from "../lib/toast";
 import { STATUS_PILL } from "./Profile";
 
-type Section = "queue" | "venues" | "reports" | "reviews";
+type Section = "queue" | "venues" | "reports" | "reviews" | "users";
 
 export default function Admin() {
   const { user, loading } = useAuth();
@@ -39,6 +40,7 @@ export default function Admin() {
     ["venues", "Venues", 0],
     ["reports", "Reports", openReports.length],
     ["reviews", "Reviews", reported.length],
+    ["users", "Users", 0],
   ];
 
   return (
@@ -55,11 +57,11 @@ export default function Admin() {
           <p className="mt-2 font-display text-3xl font-extrabold">{wa30}</p>
           <p className="text-sm text-muted-fg">WhatsApp taps, last 30 days</p>
         </div>
-        <div className="card p-5">
+        <button className="card p-5 text-left hover:border-primary" onClick={() => setSection("users")}>
           <Users className="text-accent" />
           <p className="mt-2 font-display text-3xl font-extrabold">{d.userCount}</p>
           <p className="text-sm text-muted-fg">Signed-up users</p>
-        </div>
+        </button>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -75,6 +77,7 @@ export default function Admin() {
       {active === "venues" && <Venues stores={d.stores} filter={venueFilter} setFilter={setVenueFilter} />}
       {active === "reports" && <Reports d={d} />}
       {active === "reviews" && <ReviewsAdmin d={d} />}
+      {active === "users" && <UsersAdmin stores={d.stores} />}
     </div>
   );
 }
