@@ -22,6 +22,7 @@ import type {
   ReviewStatusInput,
   ReviewsQuery,
   ReviewsResponse,
+  SiteConfig,
   SaveReviewInput,
   StoreSaveInput,
   StoresListResponse,
@@ -33,6 +34,9 @@ import type {
 type Ok = { ok: true };
 
 export const api = {
+  /** Support email and legal details edited in Admin → Settings. */
+  siteConfig: () => http.get<SiteConfig>("/config"),
+
   // ----- Auth -----
   session: () => http.get<{ user: User }>("/auth/session"),
   signInWithGoogle: (input: GoogleSignInInput) => http.post<AuthResponse>("/auth/google", input),

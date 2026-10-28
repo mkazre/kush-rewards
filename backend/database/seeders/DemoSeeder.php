@@ -14,6 +14,28 @@ use Illuminate\Support\Facades\DB;
  */
 class DemoSeeder extends Seeder
 {
+    public const EMAIL_DOMAIN = 'demo.kushrewards.online';
+
+    /** Names of the demo venues; Admin → Settings → Remove demo data deletes these. */
+    public const VENUE_NAMES = [
+        'Green Room Social Club',
+        'Paradise Lounge',
+        'The Highveld Collective',
+        'Kloof Leaf Lounge',
+        'Ruimsig Garden Club',
+        'Cloud Nine Dispensary',
+        'Little Falls Members Lounge',
+        'Welte Wellness Club',
+        'Honeydew Hideout',
+        'West Rand Botanicals',
+        'Northcliff Ridge Social',
+        'Randburg Chill Spot',
+        'Soweto Roots Club',
+        'Horizon Haze Lounge',
+        'Discovery Den',
+        'Wilro Park Wellness',
+    ];
+
     public function run(): void
     {
         mt_srand(2026);
@@ -43,7 +65,7 @@ class DemoSeeder extends Seeder
         $userIds = [];
         foreach ($reviewers as $i => $name) {
             $userIds[] = DB::table('users')->insertGetId([
-                'email' => 'demo'.($i + 1).'@demo.kushrewards.online',
+                'email' => 'demo'.($i + 1).'@'.self::EMAIL_DOMAIN,
                 'display_name' => $name, 'role' => 'user',
                 'terms_accepted_at' => $now->copy()->subDays(60 - $i),
                 'created_at' => $now->copy()->subDays(60 - $i), 'updated_at' => $now,

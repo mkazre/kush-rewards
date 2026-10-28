@@ -6,16 +6,14 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\UserAdminController;
 use Illuminate\Support\Facades\Route;
 
-// Public settings the website needs at runtime.
-Route::get('/config', fn () => response()->json([
-    'googleWebClientId' => config('kush.google_web_client_id'),
-    'supportEmail' => config('kush.support_email'),
-]));
+// Public settings the website and apps need at runtime (support email, legal details, Google client ID).
+Route::get('/config', [SettingsController::class, 'config']);
 
 Route::get('/auth/session', [AuthController::class, 'session']);
 Route::post('/auth/google', [AuthController::class, 'google']);
@@ -48,4 +46,7 @@ Route::post('/admin/logo_upload', [AdminController::class, 'logoUpload']);
 Route::get('/admin/users', [UserAdminController::class, 'list']);
 Route::post('/admin/user_save', [UserAdminController::class, 'save']);
 Route::post('/admin/user_delete', [UserAdminController::class, 'delete']);
+Route::get('/admin/settings', [SettingsController::class, 'show']);
+Route::post('/admin/settings_save', [SettingsController::class, 'save']);
+Route::post('/admin/demo_remove', [SettingsController::class, 'removeDemo']);
 Route::put('/uploads/logo/{name}', [AdminController::class, 'logoPut'])->name('logo.put')->middleware('signed');

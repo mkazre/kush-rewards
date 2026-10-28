@@ -14,7 +14,7 @@ final class IdTokens
     /** @return array claims, or null when the token is not valid */
     public static function google(string $idToken): ?array
     {
-        $audiences = array_filter(config('kush.google_client_ids'));
+        $audiences = Settings::googleClientIds();
         $claims = self::decode($idToken, 'https://www.googleapis.com/oauth2/v3/certs', 'google');
         if (! $claims
             || ! in_array($claims['iss'] ?? '', ['accounts.google.com', 'https://accounts.google.com'], true)

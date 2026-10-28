@@ -319,6 +319,14 @@ export interface LogoUploadResponse {
   url: string; // public URL to save as the store's logoUrl
 }
 
+/** GET /config: public settings the owner edits in Admin → Settings (on the website). */
+export interface SiteConfig {
+  googleWebClientId: string;
+  supportEmail: string;
+  /** Legal details keyed as LEGAL_FIELDS in lib/legalContent.ts; empty string = not filled in yet. */
+  legal: Record<string, string>;
+}
+
 /** Error body for any non-2xx response. */
 export interface ApiErrorBody {
   error: string;

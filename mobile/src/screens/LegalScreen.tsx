@@ -5,7 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, type RouteProp, useRoute } from "@react-navigation/native";
 import { ArrowLeft, Mail } from "lucide-react-native";
 import { config } from "../config";
-import { COPYRIGHT, LEGAL_DOCS, LEGAL_UPDATED, type LegalBlock } from "../lib/legalContent";
+import { COPYRIGHT, fillLegal, LEGAL_DOCS, LEGAL_UPDATED, type LegalBlock } from "../lib/legalContent";
+import { useSiteConfig } from "../hooks/queries";
 import { radius, useTheme } from "../theme/theme";
 import type { RootStackParamList } from "../navigation/types";
 import { AppText } from "../components/ui/AppText";
@@ -16,8 +17,9 @@ const SUPPORT_FALLBACK = "support@kushrewards.online";
 /** Renders **bold**, [[placeholder]] and {{support}} markup inside a paragraph. */
 function Rich({ text, variant = "body" }: { text: string; variant?: "body" | "small" }) {
   const { colors } = useTheme();
-  const support = config.legal.supportEmail || SUPPORT_FALLBACK;
-  const parts = text.replace(/\{\{support\}\}/g, support).split(/(\*\*[^*]+\*\*|\[\[[^\]]+\]\])/g).filter(Boolean);
+  const { data: site } = useSiteConfig();
+  const support = site?.supportEmail || config.legal.supportEmail || SUPPORT_FALLBACK;
+  const parts = fillLegal(text, site?.legal).replace(/\{\{support\}\}/g, support).split(/(\*\*[^*]+\*\*|\[\[[^\]]+\]\])/g).filter(Boolean);
   return (
     <AppText variant={variant}>
       {parts.map((p, i) =>
@@ -81,7 +83,8 @@ export default function LegalScreen() {
   const navigation = useNavigation();
   const { params } = useRoute<RouteProp<RootStackParamList, "Legal">>();
   const doc = LEGAL_DOCS[params.doc];
-  const support = config.legal.supportEmail || SUPPORT_FALLBACK;
+  const { data: site } = useSiteConfig();
+  const support = site?.supportEmail || config.legal.supportEmail || SUPPORT_FALLBACK;
 
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: colors.background }}>

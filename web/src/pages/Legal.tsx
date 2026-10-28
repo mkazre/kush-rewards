@@ -1,13 +1,14 @@
 // Public legal pages (/privacy, /terms, /community-rules, /support). The text is shared with
 // the mobile app (mobile/src/lib/legalContent.ts) so both always say the same thing.
 import { Fragment, type ReactNode } from "react";
-import { COPYRIGHT, LEGAL_DOCS, LEGAL_UPDATED, type LegalBlock, type LegalDocKey } from "@shared/lib/legalContent";
+import { COPYRIGHT, fillLegal, LEGAL_DOCS, LEGAL_UPDATED, type LegalBlock, type LegalDocKey, type LegalValues } from "@shared/lib/legalContent";
 import { useSiteConfig } from "../lib/queries";
 import { SUPPORT_EMAIL_FALLBACK } from "../lib/site";
 
 /** Renders **bold**, [[placeholder]] (highlighted) and {{support}} (email link). */
 function Rich({ text, support }: { text: string; support: string }) {
-  const parts = text.split(/(\*\*[^*]+\*\*|\[\[[^\]]+\]\]|\{\{support\}\})/g);
+  const legal = useSiteConfig().data?.legal as LegalValues | undefined;
+  const parts = fillLegal(text, legal).split(/(\*\*[^*]+\*\*|\[\[[^\]]+\]\]|\{\{support\}\})/g);
   return (
     <>
       {parts.map((p, i): ReactNode => {

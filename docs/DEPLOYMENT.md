@@ -81,15 +81,17 @@ cPanel → **SSL/TLS Status** → run **AutoSSL** for `kushrewards.online`. The 
 
 ## Before launch
 
-1. **Demo data:** set `SEED_DEMO=false` in `.env`. Then hide or delete the demo venues in Admin → Venues, or keep the ones you've edited into real venues. The demo reviewers can't sign in. Their emails end in `@demo.kushrewards.online`.
-2. **Legal placeholders:** fill in the `[[...]]` values (company registration number, address, Information Officer, hosting provider) in `mobile/src/lib/legalContent.ts`. Both the website and the apps use them.
-3. **Email:** create `support@kushrewards.online` in cPanel → Email Accounts.
-4. **Google sign-in:** in Google Cloud Console → APIs & Services → Credentials, create OAuth clients:
+All of this is done on the website under **Admin → Settings**. No code or `.env` changes are needed.
+
+1. **Legal details:** fill in the company registration number, address, Information Officer, hosting provider and backup retention. They replace the highlighted blanks in the Privacy Policy and Terms, on the website and in the apps.
+2. **Demo data:** click **Remove demo data**. It deletes the made-up venues and reviewers but keeps anything you added. Demo data is never added again after that.
+3. **Support email:** create `support@kushrewards.online` in cPanel → Email Accounts, or set a different address in Settings.
+4. **Google sign-in (optional):** in Google Cloud Console → APIs & Services → Credentials, create OAuth clients:
    - **Web:** authorised JavaScript origin `https://kushrewards.online`.
    - **iOS:** bundle `za.co.kushrewards.app`.
    - **Android:** package `za.co.kushrewards.app` plus your signing SHA-1.
 
-   Put the web ID in `GOOGLE_WEB_CLIENT_ID` and all three, comma-separated, in `GOOGLE_CLIENT_IDS`. Add the same IDs to `mobile/app.json → expo.extra`. Until then, email sign-in works on its own.
+   Paste the IDs into Settings. Also add the iOS and Android IDs to `mobile/app.json → expo.extra` for the app builds. Until then, email sign-in works on its own.
 5. **Sign in with Apple** (iOS app): enable the capability for `za.co.kushrewards.app` in your Apple Developer account.
 
 ## Troubleshooting

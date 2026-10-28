@@ -46,3 +46,8 @@ export function useMySubmissions(enabled: boolean) {
 export function useAdminOverview(enabled: boolean) {
   return useQuery({ queryKey: queryKeys.adminOverview, queryFn: api.adminOverview, enabled, placeholderData: (prev) => prev });
 }
+
+/** Support email and legal details from Admin → Settings. Falls back to app.json values while loading or offline. */
+export function useSiteConfig() {
+  return useQuery({ queryKey: ["siteConfig"], queryFn: api.siteConfig, staleTime: 60 * 60 * 1000 });
+}

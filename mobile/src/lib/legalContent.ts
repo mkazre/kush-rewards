@@ -8,6 +8,25 @@ export const COMPANY = "Convenient Living Solutions";
 export const LEGAL_UPDATED = "16 October 2026";
 export const COPYRIGHT = `© 2026 ${COMPANY}. KushRewards SA is operated by ${COMPANY}.`;
 
+/** Values the owner fills in under Admin → Settings → Legal details (served by GET /config as `legal`).
+ *  Each replaces its [[placeholder]] in the text below; until set, the placeholder shows highlighted. */
+export const LEGAL_FIELDS = [
+  { key: "company_registration", label: "Company registration number", placeholder: "Company registration number" },
+  { key: "physical_address", label: "Physical address", placeholder: "Physical address" },
+  { key: "info_officer_name", label: "Information Officer name", placeholder: "Information Officer name" },
+  { key: "info_officer_email", label: "Information Officer email", placeholder: "Information Officer email" },
+  { key: "hosting_provider", label: "Hosting provider", placeholder: "hosting provider" },
+  { key: "backup_retention", label: "Backup retention period (e.g. 30 days)", placeholder: "backup retention period, e.g. 30 days" },
+] as const;
+
+export type LegalValues = Partial<Record<(typeof LEGAL_FIELDS)[number]["key"], string>>;
+
+/** Replaces [[placeholders]] that have a saved value; unknown or empty ones are left for highlighting. */
+export function fillLegal(text: string, values: LegalValues | null | undefined): string {
+  if (!values) return text;
+  return LEGAL_FIELDS.reduce((t, f) => (values[f.key] ? t.split(`[[${f.placeholder}]]`).join(values[f.key]!) : t), text);
+}
+
 export type LegalBlock =
   | { type: "h2"; text: string }
   | { type: "h3"; text: string }

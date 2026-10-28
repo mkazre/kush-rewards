@@ -16,6 +16,7 @@ import type {
   ReviewsQuery,
   ReviewsResponse,
   SaveReviewInput,
+  SiteConfig,
   StoreSaveInput,
   StoresListResponse,
   SubmissionDecideInput,
@@ -23,6 +24,12 @@ import type {
   User,
 } from "@shared/types/api";
 import { LOGO_MAX_BYTES, LOGO_TYPES } from "@shared/types/api";
+
+export interface AdminSettings {
+  values: Record<string, string>;
+  defaults: Record<string, string>;
+  demo: { venues: number; users: number; reviews: number };
+}
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -74,7 +81,7 @@ const post = <T>(path: string, body: unknown = {}) => request<T>("POST", path, b
 type Ok = { ok: true };
 
 export const api = {
-  config: () => get<{ googleWebClientId: string; supportEmail: string }>("/config"),
+  config: () => get<SiteConfig>("/config"),
 
   session: () => get<{ user: User }>("/auth/session"),
   signInWithGoogle: (idToken: string) => post<AuthResponse>("/auth/google", { idToken }),
@@ -105,6 +112,9 @@ export const api = {
   adminReviewStatus: (input: ReviewStatusInput) => post<Ok>("/admin/review_status", input),
   adminUsers: (q?: string) => get<{ users: AdminUser[] }>("/admin/users", { q: q || undefined }),
   adminSaveUser: (input: AdminUserSaveInput) => post<{ id: number }>("/admin/user_save", input),
+  adminSettings: () => get<AdminSettings>("/admin/settings"),
+  adminSaveSettings: (values: Record<string, string>) => post<Ok>("/admin/settings_save", { values }),
+  adminRemoveDemo: () => post<Ok>("/admin/demo_remove"),
   adminDeleteUser: (id: number) => post<Ok>("/admin/user_delete", { id }),
 
   /** Gets a signed upload URL, PUTs the file, and returns the logo's public URL. */
