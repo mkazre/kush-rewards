@@ -1,0 +1,6 @@
+# cPanel Git Version Control runs this when you click "Deploy HEAD Commit".
+# This file is copied to the root of the built `deploy` branch by GitHub Actions.
+---
+deployment:
+  tasks:
+    - /bin/bash deploy/install.sh

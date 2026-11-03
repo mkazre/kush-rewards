@@ -1,0 +1,10 @@
+# Uploaded venue logos: never run scripts, and stop SVGs from executing JavaScript.
+Options -Indexes -ExecCGI
+RemoveHandler .php .phtml .php3 .php4 .php5 .phar
+<FilesMatch "\.(php|phtml|phar)$">
+    Require all denied
+</FilesMatch>
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; img-src data:"
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
