@@ -77,7 +77,7 @@ Even without prices, an Apple reviewer may see a list of businesses that sell ca
 - If a reviewer queries the name, explain in the review notes that "Rewards" refers to community contribution points, not purchases.
 
 ### 4.3 Which website reviewers will see
-Reviewers often open the Support/Marketing URL and the website behind the app. The **v2 web app** ("KushRewards SA – v2") shows no prices, menus or ordering and has the legal pages built in, so **publish v2 (not v1) on kushrewards.co.za** before submitting. The original v1 web app still has "Rand per gram" switched on and product menus; it must not be what reviewers find.
+Reviewers often open the Support/Marketing URL and the website behind the app. The **v2 web app** ("KushRewards SA – v2") shows no prices, menus or ordering and has the legal pages built in, so **publish v2 (not v1) on kushrewards.online** before submitting. The original v1 web app still has "Rand per gram" switched on and product menus; it must not be what reviewers find.
 
 ### 4.4 Partner (paid) listings
 Charging venues for a "Partner" badge or better placement is ordinary directory advertising and is allowed. Don't let partners publish prices, specials, menus or "order now" content in the app.
@@ -98,7 +98,7 @@ Contacting a venue is what any directory (or Google Maps) offers, and is fine. W
 - Make the app available in **South Africa only** (App Store Connect → Pricing and Availability; Play Console → Production → Countries/regions). This satisfies Apple's geo-restriction expectation and matches the legal analysis.
 - Free app, no in-app purchases, no ads.
 
-### 5.3 Web pages on kushrewards.co.za (URLs already set in `app.json`)
+### 5.3 Web pages on kushrewards.online (URLs already set in `app.json`)
 
 **Built in the v2 web app** (`/privacy`, `/terms`, `/community-rules`, `/support`, `/delete-account`, public and outside the age gate) and copied into the mobile app's Legal screen. Before launch, fill in the highlighted placeholders: company registration number, physical address, Information Officer name and email, backup retention period, and (mobile copy) the hosting provider. What each page covers:
 | Page | Must contain |
@@ -109,7 +109,7 @@ Contacting a venue is what any directory (or Google Maps) offers, and is fine. W
 | `/delete-account` | "Delete your KushRewards SA account": sign in or email verification → confirm → deletes everything (same as the in-app option). Must name "KushRewards SA" exactly as listed on Google Play |
 | Support URL (e.g. `/support`) | Contact email, short FAQ |
 
-Make sure `support@kushrewards.co.za` exists and is monitored.
+Make sure `support@kushrewards.online` exists and is monitored.
 
 ### 5.4 Icon, screenshots and artwork
 - Apple requires store metadata (icon, screenshots, preview) to suit a **4+** audience even when the app is 18+. Google applies similar standards to listings.
@@ -135,8 +135,8 @@ Make sure `support@kushrewards.co.za` exists and is monitored.
 | Primary / secondary category | Lifestyle / Navigation |
 | Keywords (≤100) | `cannabis,club,lounge,venue,guide,reviews,south africa,roodepoort,west rand,johannesburg,map,nearby` |
 | Promotional text | A local guide to cannabis clubs and lounges for adults 18+. Information only: no sales or orders. |
-| Support URL | https://kushrewards.co.za/support |
-| Privacy Policy URL | https://kushrewards.co.za/privacy |
+| Support URL | https://kushrewards.online/support |
+| Privacy Policy URL | https://kushrewards.online/privacy |
 | Availability | South Africa only |
 | Price | Free, no in-app purchases |
 
@@ -187,7 +187,7 @@ How to test:
 3. Sign in with the demo account: [email] / [password], or Sign in with Apple.
 4. User-generated content: on any review by another user tap "Report" or "Block". Write a review from a venue page (Community Rules are accepted on first post).
 5. Account deletion: Profile → About & legal → Delete my account.
-Support: support@kushrewards.co.za
+Support: support@kushrewards.online
 ```
 
 ### 6.2 Google Play Console
@@ -199,8 +199,8 @@ Support: support@kushrewards.co.za
 | Full description | Same as the Apple description above |
 | Category | Lifestyle |
 | Tags | Lifestyle, Local, Maps & Navigation (as available) |
-| Contact details | support@kushrewards.co.za · https://kushrewards.co.za |
-| Privacy policy | https://kushrewards.co.za/privacy |
+| Contact details | support@kushrewards.online · https://kushrewards.online |
+| Privacy policy | https://kushrewards.online/privacy |
 | Countries | South Africa only |
 | Ads | No ads |
 
@@ -213,8 +213,8 @@ Support: support@kushrewards.co.za
   - Data collected: Personal info → Name, Email address, User IDs (account management, app functionality); Photos (admin logo uploads only, app functionality, optional); App activity → App interactions (analytics), Other user-generated content (app functionality).
   - Location: **not collected** (processed only on the device).
   - Data shared with third parties: **None**. Data encrypted in transit: **Yes**.
-  - Users can request deletion: **Yes**, in the app and at https://kushrewards.co.za/delete-account.
-- **Account deletion URL:** https://kushrewards.co.za/delete-account
+  - Users can request deletion: **Yes**, in the app and at https://kushrewards.online/delete-account.
+- **Account deletion URL:** https://kushrewards.online/delete-account
 - **Testing:** if the developer account is a new *personal* account, run the 12-tester / 14-day closed test first. An organisation account avoids this.
 
 ---
@@ -242,7 +242,7 @@ Support: support@kushrewards.co.za
 
 - [ ] Company registered; D-U-N-S number; Apple organisation account; Google organisation account
 - [ ] Attorney's short opinion letter on file (information-only directory, no sales)
-- [ ] v2 web app published on kushrewards.co.za (not v1); website shows no prices, menus or ordering (4.3)
+- [ ] v2 web app published on kushrewards.online (not v1); website shows no prices, menus or ordering (4.3)
 - [ ] Decide `listedStoreTypes` (4.1)
 - [ ] Privacy, Terms, Community Rules, Delete-account and Support pages live with placeholders filled in; support inbox monitored
 - [ ] Backend live with all v2 endpoints and server-side rules (terms enforcement, content filter, blocks, one-report-per-user, deletion)
