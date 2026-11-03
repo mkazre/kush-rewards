@@ -8,6 +8,7 @@ import { TYPE_LABELS } from "@shared/lib/storeUtils";
 import type { AdminOverview, AdminStore, AdminSubmission } from "@shared/types/api";
 import { StoreEditor } from "../components/StoreEditor";
 import { SettingsAdmin } from "../components/SettingsAdmin";
+import { SplashAdmin } from "../components/SplashAdmin";
 import { UsersAdmin } from "../components/UsersAdmin";
 import { Empty, ErrorBox, Spinner, Stars, VenueLogo } from "../components/ui";
 import { api } from "../lib/api";
@@ -16,7 +17,7 @@ import { keys } from "../lib/queries";
 import { useToast } from "../lib/toast";
 import { STATUS_PILL } from "./Profile";
 
-type Section = "queue" | "venues" | "reports" | "reviews" | "users" | "settings";
+type Section = "queue" | "venues" | "reports" | "reviews" | "users" | "splash" | "settings";
 
 export default function Admin() {
   const { user, loading } = useAuth();
@@ -42,6 +43,7 @@ export default function Admin() {
     ["reports", "Reports", openReports.length],
     ["reviews", "Reviews", reported.length],
     ["users", "Users", 0],
+    ["splash", "Splash screens", 0],
     ["settings", "Settings", 0],
   ];
 
@@ -80,6 +82,7 @@ export default function Admin() {
       {active === "reports" && <Reports d={d} />}
       {active === "reviews" && <ReviewsAdmin d={d} />}
       {active === "users" && <UsersAdmin stores={d.stores} />}
+      {active === "splash" && <SplashAdmin />}
       {active === "settings" && <SettingsAdmin />}
     </div>
   );

@@ -25,7 +25,8 @@ export function ageOn(day: number, month: number, year: number, now = new Date()
   return age;
 }
 
-export const AgeGate = () => {
+/** `onPassed` runs once the person is confirmed 18+ (now, or on an earlier launch). */
+export const AgeGate = ({ onPassed }: { onPassed?: () => void }) => {
   const { colors } = useTheme();
   const [state, setState] = useState<"checking" | "ask" | "ok" | "under">("checking");
   const [dd, setDd] = useState("");
@@ -38,6 +39,11 @@ export const AgeGate = () => {
   useEffect(() => {
     storage.get(AGE_KEY).then((v) => setState(v === "1" ? "ok" : v === "0" ? "under" : "ask"));
   }, []);
+
+  useEffect(() => {
+    if (state === "ok") onPassed?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   if (state === "ok" || state === "checking") return null;
 

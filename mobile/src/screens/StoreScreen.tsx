@@ -23,6 +23,7 @@ import { ReviewItem } from "../components/ReviewItem";
 import { ReviewSheet } from "../components/ReviewSheet";
 import { StarRating } from "../components/StarRating";
 import { StoreMonogram } from "../components/StoreCard";
+import { OsmMap } from "../components/OsmMap";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Store">;
 
@@ -230,6 +231,11 @@ export default function StoreScreen({ route, navigation }: Props) {
 
         {/* Details */}
         <Section icon={MapPin} title="Details">
+          <OsmMap
+            height={190}
+            pins={[{ id: store.id, name: store.name, lat: store.latitude, lng: store.longitude, partner: store.isPartner }]}
+            me={location.source === "gps" ? location : null}
+          />
           <View style={{ gap: 8 }}>
             <View style={styles.kv}>
               <AppText color="mutedForeground" style={styles.k}>Address</AppText>

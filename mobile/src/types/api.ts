@@ -322,10 +322,40 @@ export interface LogoUploadResponse {
 /** GET /config: public settings the owner edits in Admin → Settings (on the website). */
 export interface SiteConfig {
   googleWebClientId: string;
+  googleIosClientId: string;
+  googleAndroidClientId: string;
   supportEmail: string;
   /** Legal details keyed as LEGAL_FIELDS in lib/legalContent.ts; empty string = not filled in yet. */
   legal: Record<string, string>;
 }
+
+// ---------- Welcome (splash) screens, edited in Admin → Splash screens ----------
+/** full = image fills the screen behind the text; block = image card above the text; icon = big icon; text = words only. */
+export type SplashLayout = "full" | "block" | "icon" | "text";
+export type SplashMode = "first_launch" | "every_launch" | "off";
+
+export interface SplashScreen {
+  id: number; // 1-4, shown in this order
+  enabled: boolean;
+  layout: SplashLayout;
+  imageUrl: string | null;
+  icon: string | null; // one of SPLASH_ICONS
+  heading: string | null;
+  body: string | null;
+  bgColor: string; // "#rrggbb"
+  textColor: string;
+  accentColor: string; // buttons and page dots
+  overlay: number; // 0-80: % darkening over a full-screen image
+}
+
+/** GET /splash. `version` changes whenever the admin saves, so "first launch" screens show again after edits. */
+export interface SplashResponse {
+  mode: SplashMode;
+  version: string;
+  screens: SplashScreen[];
+}
+
+export const SPLASH_ICONS = ["leaf", "map-pin", "star", "message-circle", "shield-check", "sparkles", "heart", "users", "compass", "party-popper"] as const;
 
 /** Error body for any non-2xx response. */
 export interface ApiErrorBody {

@@ -4,6 +4,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { useQueryClient } from "@tanstack/react-query";
 import { api } from "../api/endpoints";
 import { setUnauthorizedHandler } from "../api/client";
+import { googleSignOut } from "../lib/googleSignOut";
 import { tokenStore } from "../lib/storage";
 import type { AuthResponse, User } from "../types/api";
 
@@ -81,6 +82,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch {
       /* the token is dropped locally either way */
     }
+    await googleSignOut(); // so the Google account picker shows next time
     await dropSession();
     queryClient.invalidateQueries();
   }, [dropSession, queryClient]);
@@ -89,6 +91,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const deleteAccount = useCallback(async () => {
     await api.deleteAccount();
+    await googleSignOut();
     await dropSession();
     queryClient.invalidateQueries();
   }, [dropSession, queryClient]);

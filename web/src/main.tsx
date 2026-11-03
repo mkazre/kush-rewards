@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import { AGE_KEY, AgeGate } from "./components/AgeGate";
 import { Layout } from "./components/Layout";
+import { SplashOverlay } from "./components/Splash";
 import { Empty, Spinner } from "./components/ui";
 import { AuthProvider } from "./lib/auth";
 import { PrefsProvider, store } from "./lib/prefs";
@@ -42,6 +43,7 @@ function App() {
   return (
     <Suspense fallback={<Spinner />}>
       <ScrollToTop />
+      {!AGE_GATE_BYPASS.includes(pathname) && <SplashOverlay />}
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Discover />} />

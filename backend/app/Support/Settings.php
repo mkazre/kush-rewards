@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
 final class Settings
 {
     public const LEGAL_KEYS = ['company_registration', 'physical_address', 'info_officer_name', 'info_officer_email', 'hosting_provider', 'backup_retention'];
-    public const EDITABLE = [...self::LEGAL_KEYS, 'support_email', 'google_web_client_id', 'google_client_ids'];
+    public const EDITABLE = [...self::LEGAL_KEYS, 'support_email', 'google_web_client_id', 'google_ios_client_id', 'google_android_client_id', 'google_client_ids'];
     private const CACHE = 'app_settings';
 
     public static function all(): array
@@ -51,7 +51,7 @@ final class Settings
     /** Client IDs (web, iOS, Android) whose Google ID tokens we accept: admin settings plus .env. */
     public static function googleClientIds(): array
     {
-        $ids = [...config('kush.google_client_ids'), self::googleWebClientId(), ...explode(',', (string) self::get('google_client_ids', ''))];
+        $ids = [...config('kush.google_client_ids'), self::googleWebClientId(), (string) self::get('google_ios_client_id'), (string) self::get('google_android_client_id'), ...explode(',', (string) self::get('google_client_ids', ''))];
 
         return array_values(array_unique(array_filter(array_map('trim', $ids))));
     }

@@ -18,6 +18,8 @@ class SettingsController extends Controller
     {
         return response()->json([
             'googleWebClientId' => Settings::googleWebClientId(),
+            'googleIosClientId' => Settings::get('google_ios_client_id', ''),
+            'googleAndroidClientId' => Settings::get('google_android_client_id', ''),
             'supportEmail' => Settings::supportEmail(),
             'legal' => Settings::legal(),
         ]);

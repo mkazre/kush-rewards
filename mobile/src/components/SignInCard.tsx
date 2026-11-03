@@ -29,7 +29,7 @@ export const SignInButtons = ({ onSignedIn }: { onSignedIn?: () => void }) => {
         />
       ) : null}
       {apple.error ? <ErrorText text={apple.error} /> : null}
-      <Button title="Continue with Google" size="lg" onPress={google.start} disabled={!google.ready} loading={google.busy || apple.busy} />
+      {google.available ? <Button title="Continue with Google" size="lg" onPress={google.start} loading={google.busy || apple.busy} /> : null}
       {google.error ? <ErrorText text={google.error} /> : null}
       <LegalSmallPrint />
     </View>

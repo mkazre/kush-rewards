@@ -93,16 +93,23 @@ export function SettingsAdmin() {
         title="Google sign-in"
         intro={
           <>
-            From Google Cloud Console → APIs & Services → Credentials. Until a web client ID is set, the "Continue with Google" button is hidden and people sign in with
-            email. These IDs are public, not passwords.
+            From Google Cloud Console → APIs & Services → Credentials (step-by-step in docs/PLAY-STORE.md). Until the web client ID is set, the "Continue with
+            Google" button is hidden on the website and in the apps, and people sign in with email. These IDs are public, not passwords. Changes apply without a
+            new app release.
           </>
         }
       >
-        <Field label="Web client ID" hint="Authorised JavaScript origin: https://kushrewards.online">
+        <Field label="Web client ID (required for website and apps)" hint="Type: Web application. Authorised JavaScript origin: https://kushrewards.online. The Android app also uses this ID to sign in.">
           <input className="input font-mono text-xs" value={values.google_web_client_id ?? ""} onChange={(e) => set("google_web_client_id", e.target.value)} placeholder={defaults.google_web_client_id || "1234-abc.apps.googleusercontent.com"} />
         </Field>
-        <Field label="iOS and Android client IDs" hint="Comma-separated. Needed for Google sign-in in the mobile apps. Also add them to mobile/app.json.">
-          <input className="input font-mono text-xs" value={values.google_client_ids ?? ""} onChange={(e) => set("google_client_ids", e.target.value)} placeholder="ios-id.apps.googleusercontent.com, android-id.apps.googleusercontent.com" />
+        <Field label="Android client ID" hint="Type: Android. Package za.co.kushrewards.app plus the SHA-1 fingerprints from EAS and from Play Console → App signing.">
+          <input className="input font-mono text-xs" value={values.google_android_client_id ?? ""} onChange={(e) => set("google_android_client_id", e.target.value)} placeholder="5678-android.apps.googleusercontent.com" />
+        </Field>
+        <Field label="iOS client ID" hint="Type: iOS. Bundle ID za.co.kushrewards.app. Only needed when you release on the App Store.">
+          <input className="input font-mono text-xs" value={values.google_ios_client_id ?? ""} onChange={(e) => set("google_ios_client_id", e.target.value)} placeholder="9012-ios.apps.googleusercontent.com" />
+        </Field>
+        <Field label="Other accepted client IDs (optional)" hint="Comma-separated. Only if you use extra OAuth clients.">
+          <input className="input font-mono text-xs" value={values.google_client_ids ?? ""} onChange={(e) => set("google_client_ids", e.target.value)} />
         </Field>
       </Section>
 

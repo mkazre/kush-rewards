@@ -18,6 +18,7 @@ class AdminController extends Controller
 {
     private const LOGO_TYPES = ['image/png' => 'png', 'image/jpeg' => 'jpg', 'image/webp' => 'webp', 'image/gif' => 'gif', 'image/svg+xml' => 'svg'];
     private const LOGO_MAX = 5 * 1024 * 1024;
+    private const UPLOAD_FOLDERS = ['store-logos', 'splash'];
 
     public function overview(Request $r): JsonResponse
     {
@@ -185,28 +186,33 @@ class AdminController extends Controller
     public function logoUpload(Request $r): JsonResponse
     {
         $this->requireAdmin($r);
+        // "folder" lets the same flow upload splash-screen images (Admin → Splash screens).
+        $folder = $r->input('folder', 'store-logos');
+        if (! in_array($folder, self::UPLOAD_FOLDERS, true)) {
+            Input::fail('Unknown upload type.');
+        }
         $type = Input::oneOf($r, 'contentType', array_keys(self::LOGO_TYPES), 'Use a PNG, JPG, WEBP, GIF or SVG image');
         if (Input::int($r, 'sizeBytes') > self::LOGO_MAX) {
-            Input::fail('Logo must be 5 MB or smaller');
+            Input::fail('Images must be 5 MB or smaller');
         }
         $name = Str::uuid().'.'.self::LOGO_TYPES[$type];
 
         return response()->json([
-            'presignedUrl' => URL::temporarySignedRoute('logo.put', now()->addMinutes(10), ['name' => $name]),
+            'presignedUrl' => URL::temporarySignedRoute('logo.put', now()->addMinutes(10), ['folder' => $folder, 'name' => $name]),
             'headers' => ['Content-Type' => $type],
-            'url' => url('uploads/store-logos/'.$name),
+            'url' => url("uploads/$folder/$name"),
         ]);
     }
 
     /** PUT target for the signed URL above. */
-    public function logoPut(Request $r, string $name): JsonResponse
+    public function logoPut(Request $r, string $folder, string $name): JsonResponse
     {
-        if (! preg_match('/^[0-9a-f-]{36}\.(png|jpg|webp|gif|svg)$/', $name)) {
+        if (! in_array($folder, self::UPLOAD_FOLDERS, true) || ! preg_match('/^[0-9a-f-]{36}\.(png|jpg|webp|gif|svg)$/', $name)) {
             throw new ApiException(400, 'Bad file name');
         }
         $body = $r->getContent();
         if ($body === '' || strlen($body) > self::LOGO_MAX) {
-            throw new ApiException(400, 'Logo must be 5 MB or smaller');
+            throw new ApiException(400, 'Images must be 5 MB or smaller');
         }
         $ext = pathinfo($name, PATHINFO_EXTENSION);
         if ($ext === 'svg') {
@@ -220,7 +226,7 @@ class AdminController extends Controller
                 throw new ApiException(400, "That file isn't a valid image.");
             }
         }
-        $dir = public_path('uploads/store-logos');
+        $dir = public_path('uploads/'.$folder);
         if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
         }

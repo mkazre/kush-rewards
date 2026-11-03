@@ -1,4 +1,4 @@
-// Home tab: choose your area (suburb or GPS), search, filter, see a schematic
+// Home tab: choose your area (suburb or GPS), search, filter, see the OpenStreetMap
 // map and the venue list sorted by distance.
 import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -7,7 +7,7 @@ import { LocateFixed, Plus, Search } from "lucide-react-native";
 import { useStores } from "../hooks/queries";
 import { config } from "../config";
 import { useUserLocation } from "../hooks/useUserLocation";
-import { distanceKm, openState, SUBURBS, TYPE_LABELS } from "../lib/storeUtils";
+import { distanceKm, formatDistance, openState, SUBURBS, TYPE_LABELS } from "../lib/storeUtils";
 import { radius, useTheme } from "../theme/theme";
 import type { StoreType } from "../types/api";
 import { AppText } from "../components/ui/AppText";
@@ -16,7 +16,7 @@ import { Chip } from "../components/ui/Chip";
 import { EmptyBox, ErrorText, Skeleton } from "../components/ui/Feedback";
 import { SelectSheet } from "../components/ui/SelectSheet";
 import { TextField } from "../components/ui/TextField";
-import { AreaMap } from "../components/AreaMap";
+import { OsmMap } from "../components/OsmMap";
 import { StoreCard } from "../components/StoreCard";
 import { Screen } from "../components/Screen";
 
@@ -66,6 +66,11 @@ export default function DiscoverScreen() {
         <Button title={locating ? "Finding…" : "Near me"} icon={LocateFixed} variant="outline" onPress={useMyLocation} disabled={locating} accessibilityLabel="Use my location" />
       </View>
       {locError ? <ErrorText text={locError} /> : null}
+      {location.source === "gps" && !locError ? (
+        <AppText variant="small" color="mutedForeground">
+          Using your location{location.accuracyM ? ` (accurate to about ${location.accuracyM < 1000 ? `${location.accuracyM} m` : `${(location.accuracyM / 1000).toFixed(1)} km`})` : ""}. Distances are straight-line; tap Directions on a venue for the route.
+        </AppText>
+      ) : null}
 
       <TextField leftIcon={Search} placeholder="Search by name or suburb" value={f.q} onChangeText={(q) => setF((p) => ({ ...p, q }))} accessibilityLabel="Search venues" returnKeyType="search" />
 
@@ -88,7 +93,11 @@ export default function DiscoverScreen() {
       ) : (
         <>
           {list.length > 0 ? (
-            <AreaMap pins={list.map(({ s }) => ({ id: s.id, name: s.name, lat: s.latitude, lng: s.longitude, partner: s.isPartner }))} me={location} onPinPress={openStore} />
+            <OsmMap
+              pins={list.map(({ s, d }) => ({ id: s.id, name: s.name, subtitle: `${TYPE_LABELS[s.type]} · ${formatDistance(d)}`, lat: s.latitude, lng: s.longitude, partner: s.isPartner }))}
+              me={location}
+              onPinPress={openStore}
+            />
           ) : null}
           <View style={styles.listHead}>
             <AppText variant="h2" style={{ flex: 1, fontSize: 19 }}>

@@ -1,7 +1,7 @@
 // Discover (HANDOVER 4.1): area picker, search, filter chips, map, venues nearest first.
 import { useQueryClient } from "@tanstack/react-query";
 import { LocateFixed, Search, MapPinPlus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { distanceKm, openState, SUBURBS, TYPE_LABELS } from "@shared/lib/storeUtils";
 import type { StoreType } from "@shared/types/api";
@@ -14,7 +14,11 @@ import { LISTED_TYPES } from "../lib/site";
 
 export default function Discover() {
   const { data: stores, isLoading, error } = useStores();
-  const { location, setSuburb, locateMe, locating, locationError } = usePrefs();
+  const { location, setSuburb, locateMe, autoLocate, locating, locationError } = usePrefs();
+  // Ask for location when Discover opens, so the nearest venues come first.
+  useEffect(() => {
+    autoLocate();
+  }, [autoLocate]);
   const qc = useQueryClient();
   const [q, setQ] = useState("");
   const [openNow, setOpenNow] = useState(false);
@@ -69,6 +73,11 @@ export default function Discover() {
           </label>
         </div>
         {locationError && <p className="mt-2 text-sm text-error">{locationError}</p>}
+        {location.isGps && !locationError && (
+          <p className="mt-2 text-sm text-muted-fg">
+            Using your location{location.accuracyM ? ` (accurate to about ${location.accuracyM < 1000 ? `${location.accuracyM} m` : `${(location.accuracyM / 1000).toFixed(1)} km`})` : ""}. Distances are straight-line; tap Directions on a venue for the route.
+          </p>
+        )}
       </section>
 
       <div className="flex flex-wrap gap-2">

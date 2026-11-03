@@ -17,6 +17,9 @@ import type {
   ReviewsResponse,
   SaveReviewInput,
   SiteConfig,
+  SplashMode,
+  SplashResponse,
+  SplashScreen,
   StoreSaveInput,
   StoresListResponse,
   SubmissionDecideInput,
@@ -117,11 +120,18 @@ export const api = {
   adminRemoveDemo: () => post<Ok>("/admin/demo_remove"),
   adminDeleteUser: (id: number) => post<Ok>("/admin/user_delete", { id }),
 
-  /** Gets a signed upload URL, PUTs the file, and returns the logo's public URL. */
-  async uploadLogo(file: File): Promise<string> {
+  splash: () => get<SplashResponse>("/splash"),
+  adminSplash: () => get<{ mode: SplashMode; screens: SplashScreen[]; icons: string[] }>("/admin/splash"),
+  adminSaveSplash: (mode: SplashMode, screens: SplashScreen[]) => post<Ok>("/admin/splash_save", { mode, screens }),
+
+  /** Venue logo upload (kept for the venue editor). */
+  uploadLogo: (file: File) => api.uploadImage(file, "store-logos"),
+
+  /** Gets a signed upload URL, PUTs the file, and returns its public URL. */
+  async uploadImage(file: File, folder: "store-logos" | "splash"): Promise<string> {
     if (!(LOGO_TYPES as readonly string[]).includes(file.type)) throw new ApiError(400, "Use a PNG, JPG, WEBP, GIF or SVG image");
-    if (file.size > LOGO_MAX_BYTES) throw new ApiError(400, "Logo must be 5 MB or smaller");
-    const { presignedUrl, headers, url } = await post<LogoUploadResponse>("/admin/logo_upload", { contentType: file.type, sizeBytes: file.size });
+    if (file.size > LOGO_MAX_BYTES) throw new ApiError(400, "Images must be 5 MB or smaller");
+    const { presignedUrl, headers, url } = await post<LogoUploadResponse>("/admin/logo_upload", { contentType: file.type, sizeBytes: file.size, folder });
     const put = await fetch(presignedUrl, { method: "PUT", headers, body: file, credentials: "same-origin" });
     if (!put.ok) {
       const err = (await put.json().catch(() => null)) as { error?: string } | null;

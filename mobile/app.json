@@ -12,7 +12,7 @@
       "supportsTablet": false,
       "usesAppleSignIn": true,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "KushRewards uses your location only on your phone to sort venues by distance. It is never sent to us or shared with venues.",
+        "NSLocationWhenInUseUsageDescription": "KushRewards uses your location to show the venues closest to you and how far away they are. It stays on your phone and is never shared with us or with venues.",
         "NSPhotoLibraryUsageDescription": "Choose a venue logo to upload (admin only).",
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -21,10 +21,10 @@
       "package": "za.co.kushrewards.app",
       "versionCode": 1,
       "permissions": [
-        "android.permission.ACCESS_COARSE_LOCATION"
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ],
       "blockedPermissions": [
-        "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_BACKGROUND_LOCATION",
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
@@ -34,7 +34,11 @@
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW"
-      ]
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0d1611"
+      }
     },
     "plugins": [
       "expo-font",
@@ -53,7 +57,8 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "KushRewards uses your location only on your phone to sort venues by distance. It is never sent to us or shared with venues."
+          "locationWhenInUsePermission": "KushRewards uses your location to show the venues closest to you and how far away they are. It stays on your phone and is never shared with us or with venues.",
+          "isAndroidBackgroundLocationEnabled": false
         }
       ],
       [
@@ -62,6 +67,16 @@
           "photosPermission": "Choose a venue logo to upload (admin only).",
           "cameraPermission": false,
           "microphonePermission": false
+        }
+      ],
+      "expo-image",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#0d1611"
         }
       ]
     ],
@@ -87,6 +102,8 @@
         "projectId": "06e8a394-0589-45aa-9578-2ae83ed410c2"
       }
     },
-    "owner": "khuphukiles-team"
+    "owner": "khuphukiles-team",
+    "icon": "./assets/icon.png",
+    "backgroundColor": "#0d1611"
   }
 }

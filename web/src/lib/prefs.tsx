@@ -22,7 +22,7 @@ export const store = {
 
 export type ThemeMode = "light" | "dark" | "auto";
 
-type Location = { label: string; lat: number; lng: number; isGps: boolean };
+type Location = { label: string; lat: number; lng: number; isGps: boolean; accuracyM?: number };
 
 type PrefsCtx = {
   theme: ThemeMode;
@@ -30,12 +30,15 @@ type PrefsCtx = {
   location: Location;
   setSuburb: (name: string) => void;
   locateMe: () => void;
+  /** Asks for location automatically (the browser shows its prompt) unless the person picked an area by hand or blocked location. */
+  autoLocate: () => void;
   locating: boolean;
   locationError: string | null;
 };
 
 const Ctx = createContext<PrefsCtx | undefined>(undefined);
 const DEFAULT_SUBURB = "Roodepoort";
+const MANUAL_KEY = "kr-location-manual";
 
 function suburbLocation(name: string): Location {
   const [lat, lng] = SUBURBS[name] ?? SUBURBS[DEFAULT_SUBURB];
@@ -76,6 +79,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
 
   const setSuburb = useCallback((name: string) => {
     setLocationError(null);
+    store.set(MANUAL_KEY, "1"); // they chose an area: don't override it with GPS
     save(suburbLocation(name));
   }, []);
 
@@ -89,20 +93,39 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setLocating(false);
-        // Rounded to about 1 km: we only sort by distance.
-        save({ label: "Your location", lat: +pos.coords.latitude.toFixed(2), lng: +pos.coords.longitude.toFixed(2), isGps: true });
+        store.set(MANUAL_KEY, "0");
+        // Full precision so distances are accurate. It never leaves this browser.
+        save({ label: "Your location", lat: pos.coords.latitude, lng: pos.coords.longitude, isGps: true, accuracyM: Math.round(pos.coords.accuracy) });
       },
-      () => {
+      (err) => {
         setLocating(false);
-        setLocationError("Location is off. Allow it in your browser, or pick an area instead.");
+        setLocationError(
+          err.code === err.PERMISSION_DENIED
+            ? "Location is blocked. Allow it in your browser settings (the icon left of the address bar), or pick an area."
+            : "We couldn't find your location. Try again, or pick an area."
+        );
       },
-      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 600_000 }
+      { enableHighAccuracy: true, timeout: 15_000, maximumAge: 60_000 }
     );
   }, []);
 
+  const autoLocate = useCallback(() => {
+    if (store.get(MANUAL_KEY) === "1" || !("geolocation" in navigator)) return;
+    const go = () => locateMe();
+    // Don't nag people who already said no; the "Near me" button still works.
+    if (navigator.permissions?.query) {
+      navigator.permissions
+        .query({ name: "geolocation" as PermissionName })
+        .then((p) => p.state !== "denied" && go())
+        .catch(go);
+    } else {
+      go();
+    }
+  }, [locateMe]);
+
   const value = useMemo(
-    () => ({ theme, setTheme, location, setSuburb, locateMe, locating, locationError }),
-    [theme, setTheme, location, setSuburb, locateMe, locating, locationError]
+    () => ({ theme, setTheme, location, setSuburb, locateMe, autoLocate, locating, locationError }),
+    [theme, setTheme, location, setSuburb, locateMe, autoLocate, locating, locationError]
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

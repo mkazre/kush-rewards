@@ -23,6 +23,7 @@ import type {
   ReviewsQuery,
   ReviewsResponse,
   SiteConfig,
+  SplashResponse,
   SaveReviewInput,
   StoreSaveInput,
   StoresListResponse,
@@ -36,6 +37,8 @@ type Ok = { ok: true };
 export const api = {
   /** Support email and legal details edited in Admin → Settings. */
   siteConfig: () => http.get<SiteConfig>("/config"),
+  /** Welcome screens edited in Admin → Splash screens. */
+  splash: () => http.get<SplashResponse>("/splash"),
 
   // ----- Auth -----
   session: () => http.get<{ user: User }>("/auth/session"),
